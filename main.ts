@@ -64,6 +64,9 @@ controller.up.onEvent(ControllerButtonEvent.Released, function () {
 `)
     }
 })
+scene.onHitWall(SpriteKind.shoot, function (sprite) {
+    sprite.startEffect(effects.fire, 500)
+})
 // ATM checks cash
 scene.onHitTile(SpriteKind.Player, 9, function (sprite) {
     if (difficulty < 2) {
@@ -374,50 +377,6 @@ controller.player2.onButtonEvent(ControllerButton.Left, ControllerButtonEvent.Re
         }
     }
 })
-function enemyturret () {
-    for (let value of scene.getTilesByType(6)) {
-        turret = sprites.create(img`
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-`, SpriteKind.shoot)
-        scene.place(value, turret)
-    }
-    for (let value of scene.getTilesByType(12)) {
-        turret2 = sprites.create(img`
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-`, SpriteKind.shootleft)
-        scene.place(value, turret2)
-    }
-}
 sprites.onOverlap(SpriteKind.Player, SpriteKind.bit, function (sprite, otherSprite) {
     ammo += 1
     otherSprite.destroy()
@@ -689,7 +648,7 @@ b b b b b b b b b b b b b b b b b b b
 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . b b 2 2 b b . . . . 
 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . b b . . . . 
 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 7 . . b b . . . . 
-. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . a . . . b b . . . . 
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . c . . . b b . . . . 
 . . . . . . . . . . . . . . . . . . . . . 2 . . . . . . . . . . b b . 7 b b . . . . 
 . . . . . . . . 2 2 2 2 . . . . . . . . . . 7 . . . . . . . . . b b . . b b . . . . 
 . . . . . . . . . . . . . . . . . . . . . b b b . . . . . . . . b b 7 . b b . . . . 
@@ -697,16 +656,16 @@ b b b b b b b b b b b b b b b b b b b
 . . . . . . . . . . . . . . . . . . . . . 2 b b . . . . . . . . b b . 7 b b . . . . 
 . . . . . . 7 . . . . . . 7 . . . . . . . 2 b b . . . . . . . . b b . . b b . . . . 
 . . . . . b b b . . . . b b b . . . . . . 2 b . . . . . 8 . . . b b 7 . b b . . . . 
-. . . . . b b b . . . . b b b . . . . . . 2 b b b b . . . . . . b b . . b b . . . . 
+. . . . . b b b . . . . b b b . . . . . . 2 b b b 6 . . . . . . b b . . b b . . . . 
 . . . . . b 1 b . . . . b 1 b . . . . . . b b b . . . 8 . . . . b b . 7 b b . . . . 
 . . . . . b b b . . . . b b b . . . . . . . . . . . . . . . . . . . . . . . . . . . 
-. . . . . b 1 b . . . . b 1 b . . a b . . b 7 b . . . . b . . . . . 3 . . . . . . . 
-. . . . . b b b . . . . b b b . . b 2 . . 2 b b . . . . b . 2 2 4 b b b b 4 . . . . 
-. . . . . b 1 b . . . . b 1 b . . b b . . b 1 b . . b . b . 2 2 b 1 1 1 1 b . . . . 
+. . . . . b 1 b . . . . b 1 b . . b b . . b 7 b . . b b b b . . . . 3 . . . . . . . 
+. . . . . b b b . . . . b b b . . b 2 . . 2 b b . . b b b b . . 4 b b b b 4 . . . . 
+. . . . . b 1 b . . . . b 1 b . . b b . . b 1 b . . b 1 1 b . . b 1 1 1 1 b . . . . 
 . . . . . b b b . . . . b b b . . b b . . b b b . . b b b b 2 2 b 1 1 1 1 b . . . . 
 . . . . . b 1 b . . . . b 1 b . . b b . . b 1 b . . b 1 1 b 2 2 b b b b b b . . . . 
 . . . . . b b b . . . . b b b . . b b . . b b b . . b b b b 2 2 b 1 1 1 1 b . . . . 
-. . . . . b 1 b . . . . b 1 b . . b b . . b 1 b . . b 1 1 b 2 2 b 1 1 1 1 b . . . . 
+. . . . . b 1 b . . . . b 1 b . a b b . . b 1 b . . b 1 1 b 2 2 b 1 1 1 1 b . . . . 
 d . 7 7 . b b b . . . . b b b . b b b . . b b b . . b b b b 2 2 b 1 1 1 1 b . . . . 
 b b b b b b b b . . . . b b b 7 9 b b . . b 1 b . . b 1 1 b 2 2 b b b b b 7 . . . . 
 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 b 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 1 1 1 1 1 1 2 2 2 1 
@@ -1371,6 +1330,9 @@ function CreateCoins () {
 }
 scene.onHitTile(SpriteKind.Player, 0, function (sprite) {
 	
+})
+scene.onHitWall(SpriteKind.shootleft, function (sprite) {
+    sprite.startEffect(effects.fire, 500)
 })
 sprites.onOverlap(SpriteKind.Player, SpriteKind.shop, function (sprite, otherSprite) {
     BUY = game.askForString("want to buy something? ¨yes¨ or ¨no¨")
@@ -2907,6 +2869,50 @@ scene.onHitWall(SpriteKind.bit, function (sprite) {
 sprites.onOverlap(SpriteKind.Player, SpriteKind.passive_enemy, function (sprite, otherSprite) {
     DamagedPlayer()
 })
+function enemyturret () {
+    for (let value of scene.getTilesByType(6)) {
+        turret = sprites.create(img`
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+`, SpriteKind.shoot)
+        scene.place(value, turret)
+    }
+    for (let value of scene.getTilesByType(12)) {
+        turret2 = sprites.create(img`
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+`, SpriteKind.shootleft)
+        scene.place(value, turret2)
+    }
+}
 // moving enemy
 scene.onHitTile(SpriteKind.Bosslvl1, 4, function (sprite) {
     sprite.vx = sprite.vx * -1
@@ -3991,6 +3997,8 @@ let Mini_Boss: Sprite = null
 let bouncer: Sprite = null
 let enemyspeed_variable = 0
 let robot: Sprite = null
+let turret2: Sprite = null
+let turret: Sprite = null
 let random_spike: Image[] = []
 let check_enemy_count = 0
 let enemy_HP = 0
@@ -4003,8 +4011,6 @@ let merchant: Sprite = null
 let rightanimation = false
 let doubleJump = false
 let canjump = false
-let turret2: Sprite = null
-let turret: Sprite = null
 let INVENTORY: Sprite = null
 let canshoot = false
 let Projectile4Clone: Sprite = null
